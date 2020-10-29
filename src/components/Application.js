@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
+import { getAppointmentsForDay } from 'helpers/selectors';
 import axios from 'axios';
 
 // const days = [
@@ -23,69 +24,99 @@ import axios from 'axios';
 //   },
 // ];
 
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      },
-    },
-  },
-  {
-    id: 3,
-    time: "2pm",
-    interview: {
-      student: "Kourtney Huget",
-      interviewer: {
-        id: 2,
-        name: "Wes Anderson",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      },
-    },
-  },
-  {
-    id: 4,
-    time: "3pm",
-  },
-  {
-    id: 5,
-    time: "4pm",
-    interview: {
-      student: "Paige Lindahl",
-      interviewer: {
-        id: 3,
-        name: "Christopher Nolan",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      },
-    },
-  },
-  {
-    id: 6,
-    time: "5pm",
-  },
-];
+// const appointments = [
+//   {
+//     id: 1,
+//     time: "12pm",
+//   },
+//   {
+//     id: 2,
+//     time: "1pm",
+//     interview: {
+//       student: "Lydia Miller-Jones",
+//       interviewer: {
+//         id: 1,
+//         name: "Sylvia Palmer",
+//         avatar: "https://i.imgur.com/LpaY82x.png",
+//       },
+//     },
+//   },
+//   {
+//     id: 3,
+//     time: "2pm",
+//     interview: {
+//       student: "Kourtney Huget",
+//       interviewer: {
+//         id: 2,
+//         name: "Wes Anderson",
+//         avatar: "https://i.imgur.com/LpaY82x.png",
+//       },
+//     },
+//   },
+//   {
+//     id: 4,
+//     time: "3pm",
+//   },
+//   {
+//     id: 5,
+//     time: "4pm",
+//     interview: {
+//       student: "Paige Lindahl",
+//       interviewer: {
+//         id: 3,
+//         name: "Christopher Nolan",
+//         avatar: "https://i.imgur.com/LpaY82x.png",
+//       },
+//     },
+//   },
+//   {
+//     id: 6,
+//     time: "5pm",
+//   },
+// ];
 
 export default function Application(props) {
-  const [day, setDay] = useState("Monday");
-  const [days, setDays] = useState([]);
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {}
+  });
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
+  // const [day, setDay] = useState("Monday");
+  // const [days, setDays] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/days')
-      .then(response => {
-        console.log(response.data)
-        setDays([...response.data])
-      })
-  }, []);
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers'),
+    ]).then((all) => {
+      console.log(all);
+      setState(prev => ({...prev, 
+        days: all[0].data, 
+        appointments: all[1].data, 
+        interviewers: all[2].data}))
+    })
+  })
+    // axios.get('/api/days')
+    //   .then(response => {
+    //     console.log(response.data)
+    //     setState({...state, days: response.data})
+        // setDays([...response.data])
+      // })
 
+
+  // useEffect(() => {
+  //   axios.get('/api/appointments')
+  //     .then(response)
+  // })
+
+  const setDay = day => setState({ ...state, day });
+  // const setDays = (days) => setState((prev) => ({ ...prev, days }));
+  
   return (
     <main className="layout">
       <section className="sidebar">
@@ -96,7 +127,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList days={days} day={day} setDay={setDay} />
+          <DayList days={state.days} day={state.day} setDay={setDay} />
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
@@ -105,7 +136,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {appointments.map((appointment) => {
+        {dailyAppointments.map((appointment) => {
           return <Appointment time={props.time} {...appointment} />
         })}
         <Appointment key="last" time="5pm" />
@@ -113,4 +144,3 @@ export default function Application(props) {
     </main>
   );
 }
-
