@@ -1,4 +1,18 @@
-import React from 'react';
+
+
+export function getInterview(state, interview) {
+  if (interview === null) {
+    return null;
+  } else {
+    const interviewObj = {
+      student: interview.student
+    };
+    interviewObj.interviewer = state.interviewers[interview.interviewer];
+    return interviewObj;
+  }
+
+}
+
 
 export function getAppointmentsForDay(state, day) {
   let output = [];
