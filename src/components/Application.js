@@ -46,7 +46,6 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment,
     };
-    console.log("id:", id, "interview", appointment);
     return axios.put(`/api/appointments/${id}`, appointment)
       .then(() => {
         setState({
@@ -54,10 +53,17 @@ export default function Application(props) {
           appointments,
         });
       });
-    
   }
-  
-  
+
+  function cancelInterview(id) {
+    return axios.delete(`/api/appointments/${id}`).then(() => {
+      const nullAppointment = {
+        ...state.appointments[id],
+        interview: null,
+      };
+    });
+  }
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -79,7 +85,6 @@ export default function Application(props) {
       <section className="schedule">
       {appointments.map((appointment) => {
           const interview = getInterview(state, appointment.interview);
-          console.log('interview', {...appointment.interview});
           return (
             <Appointment
               key={appointment.id}
@@ -88,6 +93,7 @@ export default function Application(props) {
               interview={interview}
               interviewers={interviewers}
               bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
             />
           );
         })}
