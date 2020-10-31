@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
-export default function useApplicationData() {
+export default function useApplicationData(props) {
+  function updateSpots(day, days, appointments){
+    const dayObj = days.find(d => d.name === day);
+    const appointmentIDs = dayObj.appointments;
+    let spots = 0;
+    for (const id of appointmentIDs){
+     let appointment = appointments[id]
+     if (!appointment.interview){
+      spots++
+     }
+    }
+    dayObj.spots = spots;
+  }
+
 
   const [state, setState] = useState({
     day: "Monday",
@@ -9,6 +22,8 @@ export default function useApplicationData() {
     appointments: {},
     interviewers: {}
   });
+
+  const setDay = day => setState({ ...state, day });
 
   useEffect(() => {
     Promise.all([
@@ -23,34 +38,35 @@ export default function useApplicationData() {
     })
   }, []);
 
-  const setDay = day => setState({ ...state, day });
+  
 
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview },
+      interview: { ...interview }
     };
     const appointments = {
       ...state.appointments,
-      [id]: appointment,
+      [id]: appointment
     };
-    return axios.put(`/api/appointments/${id}`, appointment)
+   return axios.put(`api/appointments/${id}`, appointment)
       .then(() => {
-        setState({
-          ...state,
-          appointments,
-        });
+        updateSpots(state.day, state.days, appointments)
+        setState({...state, appointments, days:state.days});
+      })
+}
+
+  
+  function cancelInterview(id) {
+    const appointments = state.appointments
+    const appointment = appointments[id]
+    return axios.delete(`/api/appointments/${id}`)
+      .then(() => {
+        appointment.interview = null
+        updateSpots(state.day, state.days, state.appointments)
+        setState({...state, appointments, days:state.days})
       })
   }
-  
-    function cancelInterview(id) {
-        return axios.delete(`/api/appointments/${id}`).then(() => {
-          const nullAppointment = {
-            ...state.appointments[id],
-            interview: null,
-          };
-        });
-      }
 
     return {
       state,
