@@ -8,6 +8,7 @@ import Form from "components/Appointment/Form";
 import Status from "components/Appointment/Status";
 import Confirm from "components/Appointment/Confirm";
 import Error from "components/Appointment/Error";
+import useApplicationData from "hooks/useApplicationData";
 
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
