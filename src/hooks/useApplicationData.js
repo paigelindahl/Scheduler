@@ -38,8 +38,6 @@ export default function useApplicationData(props) {
     })
   }, []);
 
-  
-
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
