@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const Error = function(props) {
+const Error = function (props) {
   return (
     <main className="appointment__card appointment__card--error">
       <section className="appointment__error-message">
@@ -15,6 +15,6 @@ const Error = function(props) {
       />
     </main>
   );
-}
+};
 
 export default Error;

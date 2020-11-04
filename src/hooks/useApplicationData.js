@@ -25,7 +25,7 @@ export default function useApplicationData(props) {
   const updateSpots = (day, days, appointments) => {
     const dayIndex = days.findIndex((d) => d.name === day);
     const dayObj = days[dayIndex];
-    
+
     const appointmentIDs = dayObj.appointments;
     let spots = 0;
     for (const id of appointmentIDs) {
@@ -34,7 +34,7 @@ export default function useApplicationData(props) {
         spots++;
       }
     }
-    let newDayObj = {...dayObj, spots};
+    let newDayObj = { ...dayObj, spots };
     let newDaysArray = [...days];
     newDaysArray[dayIndex] = newDayObj;
     return newDaysArray;
@@ -51,7 +51,7 @@ export default function useApplicationData(props) {
     };
     return axios.put(`api/appointments/${id}`, appointment).then(() => {
       let newDays = updateSpots(state.day, state.days, appointments);
-      setState({ ...state, appointments , days: newDays });
+      setState({ ...state, appointments, days: newDays });
     });
   };
   const cancelInterview = (id) => {
@@ -63,7 +63,7 @@ export default function useApplicationData(props) {
       ...state.appointments,
       [id]: appointment,
     };
-    console.log('this is appointments', appointments);
+    console.log("this is appointments", appointments);
     return axios.delete(`/api/appointments/${id}`).then(() => {
       appointment.interview = null;
       let newDays = updateSpots(state.day, state.days, appointments);
