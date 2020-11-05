@@ -8,9 +8,9 @@ import Form from "components/Appointment/Form";
 import Status from "components/Appointment/Status";
 import Confirm from "components/Appointment/Confirm";
 import Error from "components/Appointment/Error";
-import useApplicationData from "hooks/useApplicationData";
 
 export default function Appointment(props) {
+
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
@@ -25,6 +25,7 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
+  //saves appointment
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -39,6 +40,7 @@ export default function Appointment(props) {
       .catch((error) => transition(ERROR_SAVE, true));
   }
 
+  //deletes appointment
   function cancel() {
     transition(DELETING, true);
     props

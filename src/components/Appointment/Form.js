@@ -16,9 +16,6 @@ const Form = function (props) {
     reset();
     props.onCancel();
   };
-  const save = function () {
-    props.onSave(name, interviewer);
-  };
 
   function validate() {
     if (name === "") {
@@ -29,6 +26,7 @@ const Form = function (props) {
     props.onSave(name, interviewer);
   }
 
+  // form to create appointment. Includes text input, interviewer selection, cancel and confirm button 
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
@@ -41,9 +39,6 @@ const Form = function (props) {
             value={name}
             onChange={(event) => setName(event.target.value)}
             data-testid="student-name-input"
-            /*
-              This must be a controlled component
-            */
           />
         </form>
         <section className="appointment__validation">{error}</section>
@@ -51,7 +46,7 @@ const Form = function (props) {
           interviewers={props.interviewers}
           value={interviewer}
           onChange={setInterviewer}
-          // id={props.id}
+          id={props.id}
         />
       </section>
       <section className="appointment__card-right">

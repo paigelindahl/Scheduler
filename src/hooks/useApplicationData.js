@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-export default function useApplicationData(props) {
+
+export default function useApplicationData() {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {},
     interviewers: {},
   });
+
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
@@ -21,11 +23,13 @@ export default function useApplicationData(props) {
       }));
     });
   }, []);
+
   const setDay = (day) => setState({ ...state, day });
+  
+  //updates remaining spots per day on scheduler
   const updateSpots = (day, days, appointments) => {
     const dayIndex = days.findIndex((d) => d.name === day);
     const dayObj = days[dayIndex];
-
     const appointmentIDs = dayObj.appointments;
     let spots = 0;
     for (const id of appointmentIDs) {
@@ -54,6 +58,7 @@ export default function useApplicationData(props) {
       setState({ ...state, appointments, days: newDays });
     });
   };
+
   const cancelInterview = (id) => {
     const appointment = {
       ...state.appointments[id],
@@ -63,17 +68,17 @@ export default function useApplicationData(props) {
       ...state.appointments,
       [id]: appointment,
     };
-    console.log("this is appointments", appointments);
     return axios.delete(`/api/appointments/${id}`).then(() => {
       appointment.interview = null;
       let newDays = updateSpots(state.day, state.days, appointments);
       setState({ ...state, appointments, days: newDays });
     });
   };
+
   return {
     state,
     setDay,
     bookInterview,
     cancelInterview,
   };
-}
+};
