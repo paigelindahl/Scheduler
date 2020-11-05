@@ -37,6 +37,7 @@ export default function Application() {
         />
       </section>
       <section className="schedule">
+        {/* creates each appointment slot*/}
         {appointments.map((appointment) => {
           const interview = getInterview(state, appointment.interview);
           return (
