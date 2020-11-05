@@ -1,5 +1,7 @@
 # Interview Scheduler
 
+Scheduler is a single-page scheduling application built with React. Data is persisted by the API server using a PostgreSQL database. Jest and Cypress tests are used throughout the development process. 
+
 ## Setup
 
 Install dependencies with `npm install`.

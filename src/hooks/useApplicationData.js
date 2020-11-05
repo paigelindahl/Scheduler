@@ -26,7 +26,7 @@ export default function useApplicationData() {
 
   const setDay = (day) => setState({ ...state, day });
   
-  //updates remaining spots per day on scheduler
+  //updates remaining spots per day on scheduler. Updates state without mutating.
   const updateSpots = (day, days, appointments) => {
     const dayIndex = days.findIndex((d) => d.name === day);
     const dayObj = days[dayIndex];
@@ -59,6 +59,7 @@ export default function useApplicationData() {
     });
   };
 
+  //cancels interview by updating state without mutating
   const cancelInterview = (id) => {
     const appointment = {
       ...state.appointments[id],
