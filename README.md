@@ -11,6 +11,12 @@ Install dependencies with `npm install`.
 ```sh
 npm start
 ```
+## Running Scheduler API
+can be found at https://github.com/paigelindahl/scheduler-api
+
+```sh
+npm start
+```
 
 ## Running Jest Test Framework
 
