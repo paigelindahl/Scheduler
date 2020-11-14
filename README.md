@@ -32,6 +32,7 @@ npm run storybook
 
 ## ScreenShots
 
+
 !["Screenshot Scheduler homepage](https://github.com/paigelindahl/Scheduler/blob/master/docs/scheduler-app.png?raw=true)
 !["GIF of adding an appointment"](https://github.com/paigelindahl/Scheduler/blob/master/docs/Scheduler%20GIF.gif?raw=true)
 
